@@ -15,6 +15,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const app = express();
 app.use(cors());
+app.use(express.json())
 
 // Load environment variables
 dotenv.config();
@@ -29,7 +30,7 @@ app.use(bodyParser.json());
 
 // Create MySQL connection
 const db = mysql.createConnection({
-  host: 'localhost',        // Your MySQL host
+  host: 'localhost',        // Your MySQL host.
   user: 'root',             // Your MySQL username
   password: 'A1ay79/6@.c60',             // Your MySQL password
   database: 'mydatabase',   // Your MySQL database name
@@ -227,6 +228,8 @@ app.post('/api/payment-success', authenticateJWT, async (req, res) => {
 // Protected route to create a new post
 app.post('/api/posts', authenticateJWT, async (req, res) => {
   const { title, description, image } = req.body;
+  console.log(title, description, image);
+  
 
   try {
     const insertPostQuery = 'INSERT INTO posts (title, description, image) VALUES (?, ?, ?)';
@@ -237,7 +240,10 @@ app.post('/api/posts', authenticateJWT, async (req, res) => {
       res.status(201).json({ id: result.insertId, title, description, image });
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error creating post' });
+   
+    
   }
 });
 
