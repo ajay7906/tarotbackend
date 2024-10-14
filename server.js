@@ -33,7 +33,7 @@ const corsOptions = {
  
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
@@ -55,6 +55,9 @@ app.use(bodyParser.json());
 //   password: 'A1ay79/6@.c60',             // Your MySQL password
 //   database: 'mydatabase',   // Your MySQL database name
 // });
+
+
+
 const db = mysql.createConnection({
   host: '88.222.213.80', // or 'localhost'
   user: 'taro_tarot',
