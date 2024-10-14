@@ -14,13 +14,33 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const app = express();
-app.use(cors());
 app.use(express.json())
 
 // Load environment variables
 dotenv.config();
 const stripe = require('stripe')(process.env.RAZORPAY_KEY_SECRET);
 console.log('STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY);
+
+
+
+
+const corsOptions = {
+  origin: 'http://localhost:5173', // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Authorization'],
+  credentials: true,
+ 
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(bodyParser.json());
+
+
+
+
+
 
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey';
@@ -29,11 +49,17 @@ const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey';
 app.use(bodyParser.json());
 
 // Create MySQL connection
+// const db = mysql.createConnection({
+//   host: 'localhost',        // Your MySQL host.
+//   user: 'root',             // Your MySQL username
+//   password: 'A1ay79/6@.c60',             // Your MySQL password
+//   database: 'mydatabase',   // Your MySQL database name
+// });
 const db = mysql.createConnection({
-  host: 'localhost',        // Your MySQL host.
-  user: 'root',             // Your MySQL username
-  password: 'A1ay79/6@.c60',             // Your MySQL password
-  database: 'mydatabase',   // Your MySQL database name
+  host: '106.76.253.80',        // Your MySQL host.
+  user: 'taro_tarot',             // Your MySQL username
+  password: 'Tarot7906@.com',             // Your MySQL password
+  database: 'taro_tarot',   // Your MySQL database name
 });
 
 // Connect to MySQL
@@ -45,12 +71,36 @@ db.connect((err) => {
 });
 
 // Middleware to authenticate JWT
+// const authenticateJWT = (req, res, next) => {
+//   const token = req.header('Authorization')
+  
+//   console.log(token);
+//   ; // Expecting 'Bearer <token>'
+//   if (!token) {
+//     return res.status(403).json({ message: 'No token provided' });
+//   }
+// ;
+   
+//   jwt.verify(token, JWT_SECRET, (err, user) => {
+//     if (err) {
+//       return res.status(401).json({ message: 'Invalid token' });
+//     }
+
+//     req.user = user; // Add user info to request object
+//     next();
+//   });
+// };
 const authenticateJWT = (req, res, next) => {
-  const token = req.header('Authorization')
-  console.log(token);
-  ; // Expecting 'Bearer <token>'
-  if (!token) {
+  const authHeader = req.header('Authorization'); // Get the Authorization header
+  
+  if (!authHeader) {
     return res.status(403).json({ message: 'No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1]; // Split and extract the token part
+  
+  if (!token) {
+    return res.status(403).json({ message: 'Token not found' });
   }
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
@@ -150,16 +200,37 @@ app.post('/api/signin', async (req, res) => {
 });
 
 // Protected route to fetch posts
-app.get('/api/posts', authenticateJWT, async (req, res) => {
+// app.get('/api/posts', async (req, res) => {
+//   try {
+//     console.log('fetch data');
+    
+//     const getPostsQuery = 'SELECT * FROM mydatabase.posts ORDER BY createdAt DESC';
+//     db.query(getPostsQuery, (err, results) => {
+//       if (err) {
+//         return res.status(500).json({ message: 'Error fetching posts' });
+//       }
+//       res.json(results);
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching posts' });
+//   }
+// });
+
+app.get('/api/posts', async (req, res) => {
   try {
-    const getPostsQuery = 'SELECT * FROM posts ORDER BY createdAt DESC';
-    db.query(getPostsQuery, (err, results) => {
-      if (err) {
-        return res.status(500).json({ message: 'Error fetching posts' });
-      }
-      res.json(results);
+    const getPostsQuery = 'SELECT * FROM mydatabase.posts ';
+    
+    // Wrap the db.query in a promise
+    const results = await new Promise((resolve, reject) => {
+      db.query(getPostsQuery, (err, results) => {
+        if (err) reject(err);
+        else resolve(results);
+      });
     });
+
+    res.json(results);
   } catch (error) {
+    console.error('Error fetching posts:', error);
     res.status(500).json({ message: 'Error fetching posts' });
   }
 });
