@@ -56,10 +56,10 @@ app.use(bodyParser.json());
 //   database: 'mydatabase',   // Your MySQL database name
 // });
 const db = mysql.createConnection({
-  host: '106.76.253.80',        // Your MySQL host.
-  user: 'taro_tarot',             // Your MySQL username
-  password: 'Tarot7906@.com',             // Your MySQL password
-  database: 'taro_tarot',   // Your MySQL database name
+  host: '88.222.213.80', // or 'localhost'
+  user: 'taro_tarot',
+  password: 'Tarot7906@.com',
+  database: 'taro_tarot'   // Your MySQL database name
 });
 
 // Connect to MySQL
