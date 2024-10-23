@@ -62,9 +62,9 @@ app.use(bodyParser.json());
 
 const db = mysql.createConnection({
   host: '88.222.213.80', // or 'localhost'
-  user: 'taro_tarot',
-  password: 'Tarot7906@.com',
-  database: 'taro_tarot'   // Your MySQL database name
+  user: '9672_deepa',
+  password: 'Deepa1234@.com',
+  database: '9672_deepa'   // Your MySQL database name
 });
 
 // Connect to MySQL
