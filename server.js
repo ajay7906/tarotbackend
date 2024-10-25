@@ -27,7 +27,8 @@ console.log('STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY);
 const corsOptions = {
   // origin: 'http://localhost:5173',
    // Replace with your frontend URL    http://88.222.213.80:4173/
-  origin: 'http://88.222.213.80:4173',
+  // origin: 'http://88.222.213.80:4173',
+  origin: ['http://88.222.213.80:4173', 'http://9672418000.shop:4173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Authorization'],
