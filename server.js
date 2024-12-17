@@ -28,7 +28,7 @@ const corsOptions = {
   // origin: 'http://localhost:5173',
    // Replace with your frontend URL    http://88.222.213.80:4173/
   // origin: 'http://88.222.213.80:4173',
-  origin: ['http://88.222.213.80:4173', 'http://9672418000.shop:4173', 'http://localhost:5173'],
+  origin: ['http://88.222.213.80:4173', 'http://tarotbydeepa.com/', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Authorization'],
@@ -45,7 +45,7 @@ app.use(bodyParser.json());
 
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey';
 
 // Middleware
