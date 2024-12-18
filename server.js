@@ -368,8 +368,8 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // SSL Certificate Paths (replace these with your actual paths)
 const sslOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/tarotbydeepa-0001.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/tarotbydeepa-0001.com/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/tarotbydeepa.com-0001/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/tarotbydeepa.com-0001/fullchain.pem'),
 };
 
 // CORS Configuration
@@ -454,5 +454,5 @@ app.post('/api/create-payment', async (req, res) => {
 const PORT = process.env.PORT || 4000;
 
 https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`Secure server running on https://yourdomain.com:${PORT}`);
+  console.log(`Secure server running on https://tarotbydeepa.com:${PORT}`);
 });
