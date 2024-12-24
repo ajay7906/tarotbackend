@@ -374,7 +374,7 @@ const sslOptions = {
 
 // CORS Configuration
 const corsOptions = {
-  origin: ['http://88.222.213.80:4173', 'http://tarotbydeepa.com/', 'http://localhost:5173'],
+  origin: ['http://88.222.213.80:4173', 'http://tarotbydeepa.com/','https://tarotbydeepa.com/', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Authorization'],
