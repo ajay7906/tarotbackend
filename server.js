@@ -429,6 +429,22 @@ app.post('/api/signup', async (req, res) => {
   });
 });
 
+//signin code
+app.post('/api/signin', async (req, res)=>{
+  const {email, password} = req.body;
+  db.query('SELECT * FROM users WHERE email = ?', [email], async (err, result)=>{
+    if(result.length === 0) return res.status(400).json({message: 'User not found'})
+       const user = result[0];
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if(!isPasswordValid) return res.status(400).json({message: 'Password is incorrect'})
+
+      const token = jwt.sign({id:user.id, email:user.email, name:user.name}, JWT_SECRET, {expiresIn: '1d'})
+      res.json({token, message: 'Signed in successfully'})
+      
+  })
+  
+})
+
 // Example: Protected POST route
 app.post('/api/posts', authenticateJWT, (req, res) => {
   const { title, description, image } = req.body;
