@@ -357,7 +357,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const fs = require('fs'); // File system for reading SSL files
 const https = require('https'); // HTTPS module
-
+const nodemailer = require('nodemailer')
 const app = express();
 dotenv.config();
 app.use(express.json());
@@ -458,6 +458,7 @@ app.post('/api/create-payment', async (req, res) => {
 
 const SYSTEM_EMAIL = process.env.EMAIL_USER;  // e.g., "contact@yourwebsite.com"
 const SYSTEM_EMAIL_PASSWORD = process.env.EMAIL_PASS;
+
 
 // Email transporter configuration
 const transporter = nodemailer.createTransport({
