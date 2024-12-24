@@ -453,18 +453,25 @@ app.post('/api/create-payment', async (req, res) => {
 
 
 
-//send mail form to the client
+
+
+
+const SYSTEM_EMAIL = process.env.EMAIL_USER;  // e.g., "contact@yourwebsite.com"
+const SYSTEM_EMAIL_PASSWORD = process.env.EMAIL_PASS;
+
+// Email transporter configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: SYSTEM_EMAIL,  // Your system email that sends the messages
+    pass: SYSTEM_EMAIL_PASSWORD
   }
 });
 
 // Contact form endpoint
 app.post('/api/contact', async (req, res) => {
-  const { name, email, message } = req.body;
+  // Get user's input from the form
+  const { name, email, message } = req.body;  // email here is the user's email from the form
 
   // Validate input
   if (!name || !email || !message) {
@@ -472,40 +479,31 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    // Email to the admin/owner
-    const adminMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.ADMIN_EMAIL, // Your email where you want to receive messages
+    // Send user's message to you (the website owner)
+    await transporter.sendMail({
+      from: SYSTEM_EMAIL,  // Your system email sends the message
+      to: 'your.personal@email.com',  // Your personal email where you want to receive messages
       subject: `New Contact Form Message from ${name}`,
       html: `
         <h3>New Contact Form Submission</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>From:</strong> ${name} (${email})</p>
         <p><strong>Message:</strong></p>
         <p>${message}</p>
       `
-    };
+    });
 
-    // Auto-reply to the client
-    const clientMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
+    // Send confirmation to the user
+    await transporter.sendMail({
+      from: SYSTEM_EMAIL,  // Your system email sends the confirmation
+      to: email,  // The user's email from the form
       subject: 'Thank you for contacting us',
       html: `
         <h3>Thank you for reaching out!</h3>
         <p>Dear ${name},</p>
-        <p>We have received your message and will get back to you as soon as possible.</p>
-        <p>Here's a copy of your message:</p>
-        <p>${message}</p>
-        <br>
-        <p>Best regards,</p>
-        <p>Your Team</p>
+        <p>We have received your message and will get back to you soon.</p>
+        <p>Best regards,<br>Your Team</p>
       `
-    };
-
-    // Send emails
-    await transporter.sendMail(adminMailOptions);
-    await transporter.sendMail(clientMailOptions);
+    });
 
     res.status(200).json({ message: 'Message sent successfully' });
   } catch (error) {
@@ -513,6 +511,12 @@ app.post('/api/contact', async (req, res) => {
     res.status(500).json({ error: 'Failed to send message' });
   }
 });
+
+
+
+
+
+
 
 
 
