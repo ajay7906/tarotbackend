@@ -440,7 +440,7 @@ app.post('/api/signin', async (req, res)=>{
 
       const token = jwt.sign({id:user.id, email:user.email, name:user.name}, JWT_SECRET, {expiresIn: '1d'})
       res.json({token, message: 'Signed in successfully'})
-      
+
   })
   
 })
@@ -453,6 +453,16 @@ app.post('/api/posts', authenticateJWT, (req, res) => {
     res.status(201).json({ message: 'Post created successfully' });
   });
 });
+
+// get all posts without authentication
+app.get('/api/posts', async (req, res)=>{
+  db.query('SELECT * FROM posts ORDER BY createdAt DESC', (err, result)=>{
+    if(err) return res.status(500).json({message: 'Error fetching posts'})
+
+     res.status(201).json(result);
+      
+  })
+})
 
 // Payment Route (Stripe)
 app.post('/api/create-payment', async (req, res) => {
