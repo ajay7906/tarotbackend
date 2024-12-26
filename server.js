@@ -49,19 +49,42 @@ db.connect((err) => {
 
 const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey';
 
-// Middleware for JWT Authentication
+// Middleware for JWT Authentication 
+
+
+// const authenticateJWT = (req, res, next) => {
+//   const authHeader = req.header('Authorization');
+//   if (!authHeader) return res.status(403).json({ message: 'No token provided' });
+
+//   const token = authHeader.split(' ')[1];
+//   jwt.verify(token, JWT_SECRET, (err, user) => {
+//     if (err) return res.status(401).json({ message: 'Invalid token' });
+//     req.user = user;
+//     next();
+//   });
+// };
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.header('Authorization');
-  if (!authHeader) return res.status(403).json({ message: 'No token provided' });
 
-  const token = authHeader.split(' ')[1];
+  // Check if the Authorization header exists
+  if (!authHeader) {
+    return res.status(403).json({ message: 'No token provided' });
+  }
+
+  // Extract the token from the Authorization header
+  const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
+
+  // Verify the token
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(401).json({ message: 'Invalid token' });
+    if (err) {
+      return res.status(401).json({ message: 'Invalid or expired token' });
+    }
+
+    // Attach user information to the request object
     req.user = user;
     next();
   });
 };
-
 // Routes
 app.get('/', (req, res) => {
   res.send('Hello, World! Secure HTTPS Server Running');
@@ -95,7 +118,10 @@ app.post('/api/signin', async (req, res)=>{
 
   })
   
-})
+})  
+
+
+
 
 // Example: Protected POST route
 app.post('/api/posts', authenticateJWT, (req, res) => {
