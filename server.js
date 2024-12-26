@@ -133,7 +133,7 @@ app.post('/api/posts', authenticateJWT, (req, res) => {
 });
 
 // get all posts without authentication
-app.get('/api/posts', async (req, res)=>{
+app.get('/api/getposts', async (req, res)=>{
   db.query('SELECT * FROM posts ORDER BY createdAt DESC', (err, result)=>{
     if(err) return res.status(500).json({message: 'Error fetching posts'})
 
